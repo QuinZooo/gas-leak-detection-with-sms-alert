@@ -4,3 +4,7 @@ Technologies Used: Flutter, Dart, IoT, Cloud Computing, Promotexter.
 Features: Status Indicators, Cloud Logging, Remote Mute
 Installation Instructions: Instructions on how to clone and run the app locally (for others or future you).
 Setup: Instructions for setting up IoT devices and cloud services.
+
+
+Contributors:
+rcpinca.it@tip.edu.ph
