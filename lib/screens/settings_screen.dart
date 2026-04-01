@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class SettingsScreen extends StatefulWidget {
   final VoidCallback onLogout;
@@ -10,8 +11,29 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  final DatabaseReference _settingsRef =
+      FirebaseDatabase.instance.ref('gasguard/settings');
+
   bool pushNotifications = true;
   bool smsAlerts = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _settingsRef.onValue.listen((event) {
+      final data = event.snapshot.value;
+      if (data != null && data is Map) {
+        setState(() {
+          pushNotifications = data['pushNotifications'] as bool? ?? true;
+          smsAlerts = data['smsAlerts'] as bool? ?? true;
+        });
+      }
+    });
+  }
+
+  void _updateSetting(String key, bool value) {
+    _settingsRef.update({key: value});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +74,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       activeTrackColor: const Color(0xFF0C7A7A),
                       onChanged: (value) {
                         setState(() => pushNotifications = value);
+                        _updateSetting('pushNotifications', value);
                       },
                     ),
                   ),
@@ -66,6 +89,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       activeTrackColor: const Color(0xFF0C7A7A),
                       onChanged: (value) {
                         setState(() => smsAlerts = value);
+                        _updateSetting('smsAlerts', value);
                       },
                     ),
                   ),
